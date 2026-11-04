@@ -1,0 +1,26 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_TOP_DOWN()
+title Уровень 2. Контейнеры АИС «Корпоративный каршеринг»
+Person(user, "Сотрудник, менеджер, администратор")
+System_Ext(trk, "Трекеры GPS/OBD", "TCP/IP")
+System_Ext(onec, "1С:Бухгалтерия", "HTTPS / JSON")
+System_Ext(ad, "Active Directory", "LDAPS / OIDC")
+System_Ext(tg, "Telegram Bot API", "HTTPS / JSON")
+System_Boundary(ais, "АИС «Корпоративный каршеринг»") {
+  Container(ui, "Клиентское приложение", "C#, WPF, MVVM", "Поиск и бронирование, поездка, отчёты")
+  Container(gw, "API Gateway", "ASP.NET Core, YARP", "Проверка JWT, маршрутизация, ограничение частоты")
+  Container(api, "Серверное приложение", "ASP.NET Core Web API", "Модули бронирования, поездок и биллинга")
+  Container(rx, "Приёмник телеметрии", "C#, Worker Service", "TCP-сервер, разбор и нормализация пакетов")
+  ContainerDb(db, "База данных", "PostgreSQL", "Автомобили, брони, поездки, телеметрия, расчёты")
+}
+Rel(user, ui, "Работает через интерфейс")
+Rel(ui, gw, "Запросы API", "HTTPS / JSON, Bearer JWT")
+Rel(gw, api, "Маршрутизирует запросы", "HTTP / JSON")
+Rel(gw, ad, "Проверка токена", "OIDC / JWKS")
+Rel(api, db, "Читает и записывает", "SQL (Npgsql)")
+Rel(api, onec, "Передаёт проводки", "HTTPS / JSON")
+Rel(api, tg, "Отправляет уведомления", "HTTPS / JSON")
+Rel(trk, rx, "Отправляют пакеты", "TCP/IP")
+Rel(rx, db, "Записывает телеметрию", "SQL (Npgsql)")
+@enduml
