@@ -72,7 +72,7 @@ public class VehicleSearchViewModel : ViewModelBase
                 Vehicles.Add(new VehicleItemViewModel(vehicle));
             }
         }
-        catch (HttpRequestException ex)
+        catch (Exception ex) when (ex is HttpRequestException or InvalidOperationException)
         {
             ErrorMessage = "Не удалось получить список автомобилей: " + ex.Message;
         }
