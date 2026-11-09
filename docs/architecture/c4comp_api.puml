@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_TOP_DOWN()
+title Уровень 3. Компоненты серверного приложения (AIS.Api, AIS.Core, AIS.Infrastructure)
+Container(gw, "API Gateway", "ASP.NET Core, YARP", "Проверка JWT, маршрутизация")
+ContainerDb(db, "База данных", "PostgreSQL", "Автомобили, брони")
+Container_Boundary(api, "Серверное приложение") {
+  Component(ep, "Эндпоинты HTTP", "AIS.Api, Program.cs", "GET /api/v1/vehicles, /health; проверка параметров, коды 400/401")
+  Component(dom, "Доменная модель", "AIS.Core", "Vehicle, Booking, VehicleClass; правило Booking.Overlaps")
+  Component(ifc, "Контракт репозитория", "AIS.Core, IVehicleRepository", "FindAvailableAsync(from, to, class)")
+  Component(efr, "Репозиторий EF Core", "AIS.Infrastructure, VehicleRepository", "Запрос свободных автомобилей к PostgreSQL")
+  Component(mem, "Демонстрационный репозиторий", "AIS.Infrastructure, InMemoryVehicleRepository", "Данные в памяти для запуска без СУБД")
+}
+Rel(gw, ep, "Передаёт запрос", "HTTP / JSON")
+Rel(ep, ifc, "Вызывает")
+Rel(ep, dom, "Использует")
+Rel(efr, ifc, "Реализует")
+Rel(mem, ifc, "Реализует")
+Rel(efr, dom, "Использует")
+Rel(efr, db, "Читает", "SQL (Npgsql)")
+@enduml

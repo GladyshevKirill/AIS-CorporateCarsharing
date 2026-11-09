@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_TOP_DOWN()
+title Уровень 3. Компоненты клиентского приложения (AIS.UI)
+Container(gw, "API Gateway", "ASP.NET Core, YARP", "GET /api/v1/vehicles")
+Container_Boundary(ui, "Клиентское приложение WPF") {
+  Component(view, "Представление", "Views/VehicleSearchView.xaml", "Поля интервала и класса, список, сообщения")
+  Component(vm, "VehicleSearchViewModel", "ViewModels", "Состояние экрана, команда SearchCommand")
+  Component(item, "VehicleItemViewModel", "ViewModels", "Строка списка: статус по-русски, топливо")
+  Component(cl, "VehicleApiClient", "Services, IVehicleApiClient", "HTTP-вызов, разбор ответа и ошибок")
+  Component(dto, "DTO", "Models, VehicleDto", "Контракт ответа сервера")
+}
+Rel(view, vm, "Привязка данных")
+Rel(vm, item, "Создаёт элементы")
+Rel(vm, cl, "Вызывает")
+Rel(cl, dto, "Десериализует в")
+Rel(cl, gw, "Запрос API", "HTTPS / JSON, Bearer")
+@enduml
