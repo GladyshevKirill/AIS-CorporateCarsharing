@@ -9,12 +9,21 @@ public class VehicleItemViewModel
     {
         Title = dto.Model;
         Plate = dto.PlateNumber;
-        Status = dto.Status;
+        VehicleClass = dto.VehicleClass;
+        Status = dto.Status switch
+        {
+            "AVAILABLE" => "Свободен",
+            "BOOKED" => "Забронирован",
+            "IN_TRIP" => "В поездке",
+            "MAINTENANCE" => "На обслуживании",
+            _ => dto.Status
+        };
         Fuel = $"{dto.FuelLevelPct:0}%";
     }
 
     public string Title { get; }
     public string Plate { get; }
+    public string VehicleClass { get; }
     public string Status { get; }
     public string Fuel { get; }
 }

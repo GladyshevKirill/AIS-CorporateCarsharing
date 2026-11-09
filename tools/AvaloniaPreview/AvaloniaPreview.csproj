@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Кроссплатформенная оболочка для запуска тех же Models, Services и ViewModels, что и в WPF-клиенте AIS.UI.
+       Не входит в AIS.sln; нужна, чтобы снимать экран вне Windows. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.2.3" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.2.3" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.3" />
+    <PackageReference Include="Avalonia.Headless" Version="11.2.3" />
+    <PackageReference Include="Avalonia.Skia" Version="11.2.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\src\AIS.UI\Models\*.cs" Link="Shared\Models\%(Filename)%(Extension)" />
+    <Compile Include="..\..\src\AIS.UI\Services\*.cs" Link="Shared\Services\%(Filename)%(Extension)" />
+    <Compile Include="..\..\src\AIS.UI\ViewModels\*.cs" Link="Shared\ViewModels\%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

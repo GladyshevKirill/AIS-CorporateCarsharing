@@ -12,3 +12,6 @@ public record VehicleDto(
 
 /// <summary>Страница результатов поиска.</summary>
 public record VehiclePageDto(IReadOnlyList<VehicleDto> Items, int Page, int Size, int Total);
+
+/// <summary>Тело ответа об ошибке (схема Error в OpenAPI).</summary>
+public record ErrorDto(string Status, string Code, string Message, string? TraceId);

@@ -12,6 +12,11 @@ public class VehicleSearchViewModel : ViewModelBase
     private DateTime _to = DateTime.Today.AddDays(1).AddHours(18);
     private bool _isBusy;
     private string? _errorMessage;
+    private string _selectedClass = AnyClass;
+    private string _resultText = "Задайте интервал и нажмите «Найти»";
+
+    /// <summary>Значение фильтра «любой класс».</summary>
+    public const string AnyClass = "Любой";
 
     public VehicleSearchViewModel(IVehicleApiClient api)
     {
@@ -20,6 +25,20 @@ public class VehicleSearchViewModel : ViewModelBase
     }
 
     public ObservableCollection<VehicleItemViewModel> Vehicles { get; } = new();
+
+    public IReadOnlyList<string> Classes { get; } = new[] { AnyClass, "ECONOMY", "BUSINESS", "VAN" };
+
+    public string SelectedClass
+    {
+        get => _selectedClass;
+        set => SetField(ref _selectedClass, value);
+    }
+
+    public string ResultText
+    {
+        get => _resultText;
+        private set => SetField(ref _resultText, value);
+    }
 
     public DateTime From
     {
@@ -65,15 +84,22 @@ public class VehicleSearchViewModel : ViewModelBase
         ErrorMessage = null;
         try
         {
-            var page = await _api.SearchAsync(From.ToUniversalTime(), To.ToUniversalTime(), null, 1, 50);
+            var vehicleClass = SelectedClass == AnyClass ? null : SelectedClass;
+            var page = await _api.SearchAsync(From.ToUniversalTime(), To.ToUniversalTime(), vehicleClass, 1, 50);
             Vehicles.Clear();
             foreach (var vehicle in page.Items)
             {
                 Vehicles.Add(new VehicleItemViewModel(vehicle));
             }
+
+            ResultText = page.Total == 0
+                ? "Свободных автомобилей на этот интервал нет"
+                : $"Найдено автомобилей: {page.Total}";
         }
         catch (Exception ex) when (ex is HttpRequestException or InvalidOperationException)
         {
+            Vehicles.Clear();
+            ResultText = string.Empty;
             ErrorMessage = "Не удалось получить список автомобилей: " + ex.Message;
         }
         finally

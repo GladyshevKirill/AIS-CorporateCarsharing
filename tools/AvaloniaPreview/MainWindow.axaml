@@ -1,0 +1,41 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="AvaloniaPreview.MainWindow"
+        Title="Корпоративный каршеринг – поиск автомобилей"
+        Width="800" Height="450">
+    <Grid Margin="12" RowDefinitions="Auto,Auto,Auto,*">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <TextBlock Text="С:" VerticalAlignment="Center" />
+            <CalendarDatePicker SelectedDate="{Binding From, Mode=TwoWay}" Width="140" />
+            <TextBlock Text="По:" VerticalAlignment="Center" Margin="8,0,0,0" />
+            <CalendarDatePicker SelectedDate="{Binding To, Mode=TwoWay}" Width="140" />
+            <TextBlock Text="Класс:" VerticalAlignment="Center" Margin="8,0,0,0" />
+            <ComboBox ItemsSource="{Binding Classes}" SelectedItem="{Binding SelectedClass, Mode=TwoWay}" Width="120" />
+            <Button Name="SearchButton" Content="Найти" Command="{Binding SearchCommand}" Margin="8,0,0,0" />
+        </StackPanel>
+        <StackPanel Grid.Row="1" Margin="0,10,0,0">
+            <TextBlock Text="{Binding ResultText}" />
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="Firebrick" TextWrapping="Wrap" />
+        </StackPanel>
+        <Grid Grid.Row="2" Margin="0,10,0,0" ColumnDefinitions="180,110,100,130,80">
+            <TextBlock Grid.Column="0" Text="Модель" FontWeight="Bold" />
+            <TextBlock Grid.Column="1" Text="Госномер" FontWeight="Bold" />
+            <TextBlock Grid.Column="2" Text="Класс" FontWeight="Bold" />
+            <TextBlock Grid.Column="3" Text="Статус" FontWeight="Bold" />
+            <TextBlock Grid.Column="4" Text="Топливо" FontWeight="Bold" />
+        </Grid>
+        <ListBox Grid.Row="3" ItemsSource="{Binding Vehicles}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid ColumnDefinitions="180,110,100,130,80">
+                        <TextBlock Grid.Column="0" Text="{Binding Title}" />
+                        <TextBlock Grid.Column="1" Text="{Binding Plate}" />
+                        <TextBlock Grid.Column="2" Text="{Binding VehicleClass}" />
+                        <TextBlock Grid.Column="3" Text="{Binding Status}" />
+                        <TextBlock Grid.Column="4" Text="{Binding Fuel}" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</Window>
