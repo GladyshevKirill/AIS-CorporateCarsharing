@@ -12,16 +12,22 @@
             <DatePicker SelectedDate="{Binding From, Mode=TwoWay}" Width="130" />
             <TextBlock Text="По:" VerticalAlignment="Center" Margin="12,0,6,0" />
             <DatePicker SelectedDate="{Binding To, Mode=TwoWay}" Width="130" />
+            <TextBlock Text="Класс:" VerticalAlignment="Center" Margin="12,0,6,0" />
+            <ComboBox ItemsSource="{Binding Classes}" SelectedItem="{Binding SelectedClass, Mode=TwoWay}" Width="110" />
             <Button Content="Найти" Command="{Binding SearchCommand}" Margin="12,0,0,0" Padding="16,2" />
         </StackPanel>
-        <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" Foreground="Firebrick" Margin="0,8,0,0" />
+        <StackPanel Grid.Row="1" Margin="0,8,0,0">
+            <TextBlock Text="{Binding ResultText}" />
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="Firebrick" TextWrapping="Wrap" />
+        </StackPanel>
         <ListView Grid.Row="2" ItemsSource="{Binding Vehicles}" Margin="0,8,0,0">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Модель" DisplayMemberBinding="{Binding Title}" Width="200" />
-                    <GridViewColumn Header="Госномер" DisplayMemberBinding="{Binding Plate}" Width="120" />
+                    <GridViewColumn Header="Модель" DisplayMemberBinding="{Binding Title}" Width="170" />
+                    <GridViewColumn Header="Госномер" DisplayMemberBinding="{Binding Plate}" Width="100" />
+                    <GridViewColumn Header="Класс" DisplayMemberBinding="{Binding VehicleClass}" Width="90" />
                     <GridViewColumn Header="Статус" DisplayMemberBinding="{Binding Status}" Width="120" />
-                    <GridViewColumn Header="Топливо" DisplayMemberBinding="{Binding Fuel}" Width="80" />
+                    <GridViewColumn Header="Топливо" DisplayMemberBinding="{Binding Fuel}" Width="70" />
                 </GridView>
             </ListView.View>
         </ListView>

@@ -30,8 +30,27 @@ public class VehicleApiClient : IVehicleApiClient
         }
 
         using var response = await _http.GetAsync(url, ct);
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = await TryReadErrorAsync(response, ct);
+            throw new HttpRequestException(error is null
+                ? $"Ошибка сервера: {(int)response.StatusCode}"
+                : $"{(int)response.StatusCode} {error.Code}: {error.Message}");
+        }
+
         var result = await response.Content.ReadFromJsonAsync<VehiclePageDto>(cancellationToken: ct);
         return result ?? throw new InvalidOperationException("Пустой ответ сервера");
+    }
+
+    private static async Task<ErrorDto?> TryReadErrorAsync(HttpResponseMessage response, CancellationToken ct)
+    {
+        try
+        {
+            return await response.Content.ReadFromJsonAsync<ErrorDto>(cancellationToken: ct);
+        }
+        catch (System.Text.Json.JsonException)
+        {
+            return null;
+        }
     }
 }
